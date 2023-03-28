@@ -349,6 +349,9 @@ new_control_connection(group_t *g, char *host)
 		uperf_error("remotehost not specified. Check profile\n");
 		return (UPERF_FAILURE);
 	}
+
+	printf("%s:%d: control host=%s\n", __func__, __LINE__, host);
+
 	/* First check if we already have one */
 	p = g->control;
 	while (p) {
@@ -359,8 +362,14 @@ new_control_connection(group_t *g, char *host)
 		p = p->next;
 	}
 	/* Not found, create a new one */
-	p = create_protocol(options.control_proto, host, options.master_port,
-			    MASTER);
+	if (options.control_host[0] != '\0') {
+		p = create_protocol(options.control_proto, options.control_host,
+				    options.master_port, MASTER);
+	} else {
+		p = create_protocol(options.control_proto, host, options.master_port,
+				    MASTER);
+	}
+
 	if (p != NULL) {
 		/* Try connecting */
 		if (p->connect(p, NULL) == 0) {

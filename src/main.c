@@ -70,13 +70,14 @@ static void
 uperf_usage(char *prog)
 {
 	(void) printf("Uperf Version %s\n", UPERF_VERSION);
-	(void) printf("Usage:   %s [-m profile] [-hvV] [-ngtTfkpaeE:X:i:P:RS:]\n",
+	(void) printf("Usage:   %s [-m profile] [-hvV] [-ngtTfkpaeE:X:i:P:RS:H:P:]\n",
 	    prog);
 	(void) printf("\t %s [-s] [-hvV]\n\n", prog);
 	(void) printf(
 	"\t-m <profile>\t Run uperf with this profile\n"
 	"\t-s\t\t Slave\n"
 	"\t-S <protocol>\t Protocol type for the control Socket [def: tcp]\n"
+	"\t-H <host>\t Host for the control Socket [defaults to remotehost in flowop]\n"
 	"\t-n\t\t No statistics\n"
 	"\t-T\t\t Print Thread statistics\n"
 	"\t-t\t\t Print Transaction averages\n"
@@ -162,8 +163,9 @@ init_options(int argc, char **argv)
 	options.master_port = MASTER_PORT;
 	options.control_proto = PROTOCOL_TCP;
 	oserver = oclient = ofile = 0;
+	memset(options.control_host, '\0', MAXHOSTNAME);
 
-	while ((ch = getopt(argc, argv, "E:epTgtfknasm:X:i:P:S:RvVh")) != EOF) {
+	while ((ch = getopt(argc, argv, "E:epTgtfknasm:X:i:P:S:H:RvVh")) != EOF) {
 		switch (ch) {
 #ifdef USE_CPC
 		case 'E':
@@ -284,6 +286,13 @@ init_options(int argc, char **argv)
 				uperf_fatal("Protocol %s not supported\n",
 				    optarg);
 			}
+			break;
+		case 'H':
+			if (!optarg) {
+				uperf_fatal("Please specify control host\n");
+			}
+
+			strncpy(options.control_host, optarg, MAXHOSTNAME);
 			break;
 		case 'R':
 			options.copt |= RAW_STATS;
