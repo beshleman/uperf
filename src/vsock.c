@@ -42,6 +42,7 @@
 #include "workorder.h"
 #include "protocol.h"
 #include "generic.h"
+#include "vsock.h"
 
 /* Defined in <linux/vm_sockets.h> since Linux 5.8 */
 #ifndef VMADDR_CID_LOCAL
@@ -73,7 +74,7 @@ set_vsock_options(int fd, flowop_options_t *f)
 	return;
 }
 
-static int
+int
 protocol_vsock_sockaddr(struct sockaddr_storage *sas, socklen_t *len,
 			const char *cid_str, unsigned int port, int listen)
 {

@@ -30,7 +30,7 @@ if RDS_C
 uperf_SOURCES +=rds.c
 endif
 if VSOCK_C
-uperf_SOURCES +=vsock.c
+uperf_SOURCES +=vsock.c vsock_dgram.c
 endif
 
 

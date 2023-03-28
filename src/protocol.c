@@ -55,6 +55,7 @@ protocol_t *protocol_ssl_create(char *, int);
 protocol_t *protocol_sctp_create(char *, int);
 protocol_t *protocol_rds_create(char *, int);
 protocol_t *protocol_vsock_create(char *, int);
+protocol_t *protocol_vsock_dgram_create(char *, int);
 
 void generic_fini(protocol_t *);
 void udp_fini(protocol_t *);
@@ -87,6 +88,7 @@ static proto_list_t plist[] = {
 #endif /* HAVE_SSL */
 #ifdef HAVE_VSOCK
 	{ "vsock", PROTOCOL_VSOCK, NULL, protocol_vsock_create, generic_fini},
+	{ "vsock-dgram", PROTOCOL_VSOCK_DGRAM, NULL, protocol_vsock_dgram_create, generic_fini},
 #endif /* HAVE_VSOCK */
 };
 
@@ -173,6 +175,7 @@ protocol_to_str(proto_type_t t)
 		case PROTOCOL_SSL: return "SSL";
 		case PROTOCOL_SCTP: return "SCTP";
 		case PROTOCOL_VSOCK: return "VSOCK";
+		case PROTOCOL_VSOCK_DGRAM: return "VSOCK-DGRAM";
 		default: return "Unknown";
 	}
 }
